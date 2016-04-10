@@ -1,0 +1,18 @@
+/* app css stylesheet */
+
+body {
+  padding-top: 20px;
+}
+
+li {
+  list-style-type: none;
+}
+
+.box {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.box-item {
+  width: 50%;
+}
