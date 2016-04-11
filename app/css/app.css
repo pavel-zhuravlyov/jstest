@@ -16,3 +16,7 @@ li {
 .box-item {
   width: 50%;
 }
+
+.details {
+  position: fixed;
+}
