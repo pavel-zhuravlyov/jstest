@@ -6,21 +6,27 @@ pokedexControllers.controller('PokemonController', function($scope, PokemonServi
     $scope.counter = 0;
     $scope.pokemonsPortionSize = 12;
 
-    $("#spinner").show();
+    angular.element("#spinner").show();
     PokemonService.getPokemonsList($scope.pokemonsPortionSize, $scope.counter).then(function(value) {
-        $("#spinner").hide();
+        angular.element("#spinner").hide();
         $scope.pokemons = value;
     });
+    PokemonService.getPokemonTypes().then(function (value) {
+      $scope.pokemonTypes = [];
+      value.forEach(function (element) {
+        $scope.pokemonTypes.push(element.name);
+      });
+    });
 
-    $scope.getPokemonImageUri = function(id) {
+    $scope.getPokemonImageUrl = function(id) {
         return 'http://pokeapi.co/media/img/' + id + '.png';
     };
 
     $scope.loadMorePokemons = function() {
-        $("#spinner").show();
+        angular.element("#spinner").show();
         $scope.counter += 1;
         PokemonService.getPokemonsList($scope.pokemonsPortionSize, $scope.counter).then(function(value) {
-            $("#spinner").hide();
+            angular.element("#spinner").hide();
             $scope.pokemons = $scope.pokemons.concat(value);
         });
     };
@@ -40,5 +46,20 @@ pokedexControllers.controller('PokemonController', function($scope, PokemonServi
             'Total moves': pokemon.moves.length
         };
         $scope.pokemon = pokemon;
+    };
+
+    $scope.typeFilter = function (pokemon) {
+      if ($scope.selectedType) {
+        var types = [];
+        pokemon.types.forEach(function (type) {
+          types.push(type.name);
+        });
+        return types.some(function (element) {
+          return element == $scope.selectedType.toLowerCase();
+        });
+      } else {
+        return true;
+      }
+
     };
 });
