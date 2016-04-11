@@ -2,7 +2,7 @@
 
 var pokedexControllers = angular.module('pokedexControllers', []);
 
-pokedexControllers.controller('PokemonController', function($scope, Pokemon) {
+pokedexControllers.controller('PokemonController', function($scope, dataService) {
     // Pokemon.get({id: 1}, function(pokemon) {
     //     $scope.pokemon = pokemon;
     //   });
@@ -10,19 +10,18 @@ pokedexControllers.controller('PokemonController', function($scope, Pokemon) {
     $scope.counter = 0;
     $scope.pokemonsPortionSize = 10;
 
-    Pokemon.query({
-        limit: 10,
-    }).$promise.then(function(response) {
-        $scope.pokemons = response.objects;
+    dataService.getPokemonsList($scope.pokemonsPortionSize, $scope.counter).then(function(value) {
+        $scope.pokemons = value;
     });
+
+    $scope.getPokemonImageUri = function(id) {
+        return 'http://pokeapi.co/media/img/' + id + '.png';
+    };
 
     $scope.loadMorePokemons = function() {
         $scope.counter += 1;
-        Pokemon.query({
-            limit: $scope.pokemonsPortionSize,
-            offset: $scope.pokemonsPortionSize * $scope.counter
-        }).$promise.then(function(response) {
-            $scope.pokemons = $scope.pokemons.concat(response.objects);
+        dataService.getPokemonsList($scope.pokemonsPortionSize, $scope.counter).then(function(value) {
+            $scope.pokemons = $scope.pokemons.concat(value);
         });
     };
 });

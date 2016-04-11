@@ -26,6 +26,7 @@
                     <li class="box-item" ng-repeat="pokemon in pokemons">
                         <div class="panel panel-default">
                             <div class="panel-body">
+                                <img ng-src="{{getPokemonImageUri(pokemon.national_id)}}" alt="">
                                 <p>{{pokemon.name}}</p>
                             </div>
                         </div>
