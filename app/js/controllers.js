@@ -6,7 +6,9 @@ pokedexControllers.controller('PokemonController', function($scope, PokemonServi
     $scope.counter = 0;
     $scope.pokemonsPortionSize = 12;
 
+    $("#spinner").show();
     PokemonService.getPokemonsList($scope.pokemonsPortionSize, $scope.counter).then(function(value) {
+        $("#spinner").hide();
         $scope.pokemons = value;
     });
 
@@ -15,8 +17,10 @@ pokedexControllers.controller('PokemonController', function($scope, PokemonServi
     };
 
     $scope.loadMorePokemons = function() {
+        $("#spinner").show();
         $scope.counter += 1;
         PokemonService.getPokemonsList($scope.pokemonsPortionSize, $scope.counter).then(function(value) {
+            $("#spinner").hide();
             $scope.pokemons = $scope.pokemons.concat(value);
         });
     };
@@ -27,7 +31,7 @@ pokedexControllers.controller('PokemonController', function($scope, PokemonServi
                 return result + " " + type.name;
             }, ''),
             'Attack': pokemon.attack,
-            'Defense': pokemon.defense, 
+            'Defense': pokemon.defense,
             'HP': pokemon.hp,
             'SP Attack': pokemon.sp_atk,
             'SP Defense': pokemon.sp_def,
