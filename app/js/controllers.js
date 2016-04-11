@@ -4,7 +4,7 @@ var pokedexControllers = angular.module('pokedexControllers', []);
 
 pokedexControllers.controller('PokemonController', function($scope, PokemonService) {
     $scope.counter = 0;
-    $scope.pokemonsPortionSize = 10;
+    $scope.pokemonsPortionSize = 12;
 
     PokemonService.getPokemonsList($scope.pokemonsPortionSize, $scope.counter).then(function(value) {
         $scope.pokemons = value;
@@ -21,11 +21,20 @@ pokedexControllers.controller('PokemonController', function($scope, PokemonServi
         });
     };
 
-
     $scope.showPokemonDetails = function(pokemon) {
-        // PokemonService.getPokemon(id).then(function(value) {
-        //     $scope.pokemon = value;
-        // });
+        $scope.pokemonDetails = {
+            'Type': pokemon.types.reduce(function(result, type) {
+                return result + " " + type.name;
+            }, ''),
+            'Attack': pokemon.attack,
+            'Defense': pokemon.defense, 
+            'HP': pokemon.hp,
+            'SP Attack': pokemon.sp_atk,
+            'SP Defense': pokemon.sp_def,
+            'Speed': pokemon.speed,
+            'Weight': pokemon.weight,
+            'Total moves': pokemon.moves.length
+        };
         $scope.pokemon = pokemon;
     };
 });
