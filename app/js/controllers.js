@@ -2,33 +2,43 @@
 
 var pokedexControllers = angular.module('pokedexControllers', []);
 
-pokedexControllers.controller('PokemonController', function($scope, PokemonService) {
+pokedexControllers.controller('PokemonController', function($scope, PokemonResourse) {
     $scope.counter = 0;
     $scope.pokemonsPortionSize = 12;
+    $scope.pokemons = [];
 
-    angular.element("#spinner").show();
-    PokemonService.getPokemonsList($scope.pokemonsPortionSize, $scope.counter).then(function(value) {
-        angular.element("#spinner").hide();
-        $scope.pokemons = value;
-    });
-    PokemonService.getPokemonTypes().then(function (value) {
-      $scope.pokemonTypes = [];
-      value.forEach(function (element) {
-        $scope.pokemonTypes.push(element.name);
-      });
-    });
-
-    $scope.getPokemonImageUrl = function(id) {
-        return 'http://pokeapi.co/media/img/' + id + '.png';
+    $scope.getPokemonsList = function() {
+        $scope.spinner = true;
+        PokemonResourse.pokemon.query({
+            limit: $scope.pokemonsPortionSize,
+            offset: $scope.counter * $scope.pokemonsPortionSize
+        }, function(data) {
+            $scope.pokemons = $scope.pokemons.concat(data.objects);
+            $scope.spinner = false;
+        }, function(err) {
+            console.log(err);
+        });
     };
 
-    $scope.loadMorePokemons = function() {
-        angular.element("#spinner").show();
-        $scope.counter += 1;
-        PokemonService.getPokemonsList($scope.pokemonsPortionSize, $scope.counter).then(function(value) {
-            angular.element("#spinner").hide();
-            $scope.pokemons = $scope.pokemons.concat(value);
+    $scope.getPokemonsTypes = function() {
+        PokemonResourse.pokemonType.query({
+            limit: 100
+        }, function(data) {
+            $scope.pokemonTypes = [];
+            data.objects.forEach(function(element) {
+                $scope.pokemonTypes.push(element.name);
+            });
+        }, function(err) {
+            console.log(err);
         });
+    };
+
+    $scope.getPokemonsList();
+    $scope.getPokemonsTypes();
+
+    $scope.loadMorePokemons = function() {
+        $scope.counter += 1;
+        $scope.getPokemonsList();
     };
 
     $scope.showPokemonDetails = function(pokemon) {
@@ -48,18 +58,18 @@ pokedexControllers.controller('PokemonController', function($scope, PokemonServi
         $scope.pokemon = pokemon;
     };
 
-    $scope.typeFilter = function (pokemon) {
-      if ($scope.selectedType) {
-        var types = [];
-        pokemon.types.forEach(function (type) {
-          types.push(type.name);
-        });
-        return types.some(function (element) {
-          return element == $scope.selectedType.toLowerCase();
-        });
-      } else {
-        return true;
-      }
+    $scope.typeFilter = function(pokemon) {
+        if ($scope.selectedType) {
+            var types = [];
+            pokemon.types.forEach(function(type) {
+                types.push(type.name);
+            });
+            return types.some(function(element) {
+                return element == $scope.selectedType.toLowerCase();
+            });
+        } else {
+            return true;
+        }
 
     };
 });

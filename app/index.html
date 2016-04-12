@@ -39,7 +39,7 @@
                   <h2 class="panel-title text-center">{{pokemon.name}}</h2>
                 </div>
                 <div class="panel-body">
-                  <img ng-src="{{getPokemonImageUrl(pokemon.national_id)}}" alt="">
+                  <img ng-src="{{'http://pokeapi.co/media/img/' + pokemon.national_id + '.png'}}" alt="">
                   <p ng-repeat="type in pokemon.types">
                       {{type.name}}
                   </p>
@@ -49,7 +49,7 @@
           </li>
         </ul>
         <div>
-          <img id="spinner" ng-src="img/spinner.gif" style="display:none;">
+          <img id="spinner" ng-src="img/spinner.gif" ng-show="spinner">
         </div>
         <button type="button" class="btn btn-lg" style="margin-bottom: 50px;" ng-click="loadMorePokemons()">
           More
@@ -64,7 +64,7 @@
           </div>
           <div class="panel-body">
             <div class="text-center">
-              <img ng-src="{{getPokemonImageUrl(pokemon.national_id)}}" alt="">
+              <img ng-src="{{'http://pokeapi.co/media/img/' + pokemon.national_id + '.png'}}" alt="">
             </div>
             <table class="table">
               <tr ng-repeat="(name, value) in pokemonDetails">
